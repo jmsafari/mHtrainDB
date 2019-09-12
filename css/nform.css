@@ -1,0 +1,149 @@
+#sectionplus{
+	cursor:pointer;
+	color:#fff;
+	font-size:30px;
+	font-weight: bold;
+	text-decoration:none;
+}
+
+#sectionplus:hover{
+
+	text-decoration:none;
+}
+
+.class-saveX{
+
+    position:fixed;
+	top: 0;
+    z-index:100;
+	padding-top:24px;
+    background:#fff;
+    width:100%;
+    height:100%;
+    background:#fff;
+}
+
+.class-save { 
+	 position: fixed; 
+	 top: 0; 
+	 left: 0; 
+	 bottom: 0; 
+	 width: 100%; 
+	 height: 100%; 
+	 background-color: rgba(0,0,0,.6); 
+	 z-index: 5000;  
+} 
+ 
+.modal-window { 
+	 /** position: absolute;  **/
+	 top: 20%; 
+	 /** left: 40%;  **/
+	 text-align:center;
+	 /** width: 400px; **/
+	 height: auto; 
+	 /** margin-left: -150px;  **/
+	 padding: 20px; 
+	 border: 2px solid #000; 
+	 background-color: #FFF; 
+	 color:#000;
+	 -moz-border-radius: 6px; 
+	 -webkit-border-radius: 6px; 
+	 border-radius: 6px; 
+	 -moz-box-shadow: 0 0 14px #123; 
+	 -webkit-box-shadow: 0 0 14px #123; 
+	 box-shadow: 0 0 14px #123; 
+	 z-index: 5000; 
+}
+
+.custEvt{
+}
+
+
+/**************************/
+/*                        */
+/*       Sliding Menu     */
+/*                        */
+/**************************/
+
+
+.sidenav {
+    height: auto;
+    width: 99%;
+	border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+	
+    position: fixed;
+    z-index: 1030;
+    bottom: 0;
+	/* right:1%; */
+    background-color: #fff;
+	border-right: 2px solid #009688;
+	border-left: 2px solid #009688;
+	border-top: 2px solid #009688;
+    overflow-x: hidden;
+	overflow-y: hidden;
+    transition: 0.9s;
+
+	-webkit-box-shadow: 0 6px 6px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.sidenav a {
+    padding: 10px 8px 10px 16px;
+    text-decoration: none;
+    font-size: 18px;
+	font-weight:bold;
+    /* color: #818181; */
+    display: block;
+    /* transition: 0.9s; */
+	border-bottom: 1px solid #ddd;
+}
+
+.sidenav a:hover, .offcanvas a:focus{
+    color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {/*padding-top: 15px;*/}
+  .sidenav a {font-size: 18px;}
+}
+
+.sectHeader{
+    background:#40AC62;
+	color:#fff;
+    height: 50px;
+    padding: 10px 0px 0px 16px;
+    font-size: 18px;
+    font-weight: bold;
+    /* width: 0px; */
+	border-right:#ccc;
+	-webkit-box-shadow: 2px 0 0 rgba(0,0,0,.175);
+    box-shadow:  2px 0 0 rgba(0,0,0,.175);
+	/* transition: width .5s; */
+}
+
+.sectHeader span{
+	font-size:21px;
+	font-weight:bold;
+	padding-right:8px;
+	cursor:pointer;
+}
+
+.m-overlay { 
+	 position: fixed; 
+	 top: 0; 
+	 left: 0; 
+	 bottom: 0; 
+	 width: 100%; 
+	 height: 100%; 
+	 background-color: rgba(0,0,0,.6); 
+	 z-index: 7;  
+}

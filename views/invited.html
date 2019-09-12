@@ -1,0 +1,67 @@
+<nav id="myNavbar" class="h3acolor navbar navbar-expand navbar-fixed-top" style="position:fixed;z-index:9999;width:100%;height: 51px;">
+	<div class="container" style="margin-left:0px;">
+		<div class="navbar-header">
+			<a class="navbar-brand" ng-click="backButton()" style="cursor:pointer;color:#fff;font-size:18px;font-weight:bold;">
+					<div class="sync-label"><i class="fas fa-arrow-left" style="font-size:16px;"></i>&nbsp;&nbsp;&nbsp;Meeting - Invited Speakers</div>
+			</a>
+		</div>
+	</div>
+</nav>
+
+<div class="col-md-12" ng-show="!myPage.displaySpinner" style="display:inline-block;margin-top: 48px;width:100%;">
+	 <div class="checkAll" ng-show="!myPage.displaySpinner" style="padding:10px 0 10px 15px;background-color:#eee;">
+		 <!--label style="margin-right:15px;font-weight:bold;font-size:15px;" class="btn btn-primary btn-xs">Duration 6 days</label-->	
+			Result{{myPage.PeopleData.length>1 ? 's':''}} ({{myPage.PeopleData.length}})		 
+	 </div>
+	 <div class="checkAll" ng-show="!online && myPage.displaySpinner" style="padding:10px 0 10px 15px;background-color:#ffc107;">
+			<i class="fas fa-info-circle"></i> No Internet access... :(
+	 </div>
+	 
+</div>
+
+    <div id="wrapper"  ng-show="!myPage.displaySpinner">
+
+				  <div id="content-wrapper" style="margin-top:48px;">
+
+					<div class="container-fluid">
+
+					  <!-- Page Content -->
+					  <div class="row">
+						  <div ng-repeat="item in myPage.PeopleData" class="col-xs-12 col-sm-6 col-md-4" style="margin-top:12px;">
+								<div>
+									<div class="mainflip">
+										<div class="frontside">
+											<div class="card">
+												<div class="card-body text-center">
+													<p><img class=" img-fluid" src="{{item.photo}}" width="200px" alt="card image"></p>
+													<h5 class="card-title">{{item.titles_names}}</h5>
+													<p class="card-text"><b>{{item.details}}</b></p>
+													<!-- <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a> -->
+												</div>
+											</div>
+										</div>                        
+									</div>
+								</div>                
+							</div>
+					  </div>
+					  <!-- Page Content -->
+					</div>
+					<!-- /.container-fluid -->
+
+				  </div>
+				  <!-- /.content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+	
+<!---- Spinner / Loader  & App is Offline   ---->
+
+<div ng-show="myPage.displaySpinner" class="col-md-12 column" style="margin-top:140px;">
+		<center id="loading">
+				<div>
+						<div class="loader"></div>	
+						<strong>Loading...</strong>
+				</div>
+		</center>
+</div>

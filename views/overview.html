@@ -1,0 +1,56 @@
+
+<nav id="myNavbar" class="h3acolor navbar navbar-expand navbar-fixed-top" style="position:fixed;z-index:9999;width:100%;height: 51px;">
+	<div class="container" style="margin-left:0px;">
+		<div class="navbar-header">
+			<a class="navbar-brand" ng-click="backButton()" style="cursor:pointer;color:#fff;font-size:18px;font-weight:bold;">
+					<div class="sync-label"><i class="fas fa-arrow-left" style="font-size:16px;"></i>&nbsp;&nbsp;&nbsp;Meeting - Agenda Overview</div>
+			</a>
+		</div>
+	</div>
+</nav>
+
+				
+<div class="col-md-12" style="display:inline-block;margin-top: 48px;width:100%;">
+	 <div class="checkAll" ng-show="!myPage.displaySpinner" style="padding:10px 0 10px 15px;background-color:#eee;">
+		 <!--label style="margin-right:15px;font-weight:bold;font-size:15px;" class="btn btn-primary btn-xs">Duration 6 days</label-->	
+			{{myPage.MainVenue}}		 
+	 </div>
+	 <div class="checkAll" ng-show="!online && myPage.displaySpinner" style="padding:10px 0 10px 15px;background-color:#ffc107;">
+			<i class="fas fa-info-circle"></i> No Internet access... :(
+	 </div> 
+</div>
+
+<!--div class="col-md-12 column simpleMargin" style="padding:0;"-->
+<div ng-show="!myPage.displaySpinner" class="col-md-12 column" style="padding:0;margin-top:51px;">
+<ul class="list-group" style="margin-bottom:0;">
+		<li  ng-repeat="item in myPage.Overview" class="list-group-item" style="padding:14px 14px;margin-bottom:0;border:0;border-bottom:1px solid #ddd;cursor:pointer;" >
+				<table style="white-space:nowrap;overflow:hidden;width:100%;font-weight: bold;">
+				<tr  class="clickable-row" data-href="/agenda/{{item.evt_nid}}/{{item.date}}/{{myPage.urlEncode(item.theme)}}">
+				 <td>
+					<span style="font-weight:bolder;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:inline-block;font-size:15px;width:{{myPage.dbnameWidth}}px;max-width:100%;">
+						{{dateFormatting(item.date)}}
+					</span>
+					<p></p>
+					<div class="sndLine" style="width:{{myPage.dbnameWidth}}px;word-wrap:break-word;white-space:pre-wrap;">{{item.descr}}</div>
+				</td>
+				<td><i class="fas fa-angle-right" style="font-size:25px;"></i></td>
+			  </tr>
+			  </table>
+		</li>
+</ul>
+</div>
+
+
+<!---- Spinner / Loader  & App is Offline   ---->
+
+<div ng-show="myPage.displaySpinner" class="col-md-12 column" style="margin-top:140px;">
+
+		<button ng-show="!online" type="button" class="btn btn-warning btn-lg btn-block login-button"><i class="fas fa-info-circle"></i> No Internet access... :( </button>
+
+		<center id="loading" ng-show="online">
+				<div>
+						<div class="loader"></div>	
+						<strong>Loading...</strong>
+				</div>
+		</center>
+</div>
