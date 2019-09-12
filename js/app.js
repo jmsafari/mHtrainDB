@@ -89,6 +89,14 @@ var controllers = {};
 									$scope.myPage.alertAnnoucement = true;
 							}
 							$scope.myPage.displaySpinner=false;
+						
+							angular.element(document).ready(function () {
+								jQuery(".clickable-row").click(function() {
+									//window.location = $(this).data("href");
+									$location.path($(this).data("href"));
+									$scope.$apply();
+								});
+							});
 					}).error(function(error) {
 							console.log("erreur:" + error);
 					});
