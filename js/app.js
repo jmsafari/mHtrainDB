@@ -83,20 +83,18 @@ var controllers = {};
 
 			Factory.getHome().success( function(data){
 				
-					$rootScope.HomeData = data[0];				
+					$rootScope.HomeData = data[0];
+					$scope.myPage.displaySpinner=false;
+					angular.element(document).ready(function () {
+						jQuery(".clickable-row").click(function() {
+							$location.path($(this).data("href"));
+							$scope.$apply();
+						});
+					});					
 					Factory.getAnnouncements($rootScope.HomeData.evt_nid).success( function(data){
 							if(localStorage.latestAnnouncement!==data[0].Submitted){
 									$scope.myPage.alertAnnoucement = true;
 							}
-							$scope.myPage.displaySpinner=false;
-						
-							angular.element(document).ready(function () {
-								jQuery(".clickable-row").click(function() {
-									//window.location = $(this).data("href");
-									$location.path($(this).data("href"));
-									$scope.$apply();
-								});
-							});
 					}).error(function(error) {
 							console.log("erreur:" + error);
 					});
