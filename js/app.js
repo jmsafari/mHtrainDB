@@ -22,6 +22,7 @@ app.run(function($window,$http,Factory,$rootScope,$filter,$location) {
 	  
 	  localStorage.backTo = -1;
 	  localStorage.latestAnnouncement =  localStorage.latestAnnouncement=='' ? '' : localStorage.latestAnnouncement;
+	  localStorage.settings = localStorage.settings=='' ? '' : localStorage.settings;
 	  
 	  $rootScope.backButton = function() {
 			$window.history.go(-1);
@@ -60,7 +61,7 @@ app.config( function($routeProvider){
 		$routeProvider.when('/',{controller:'HomeCtrl',templateUrl:'views/home.html'})
 					  .when('/home',{controller:'HomeCtrl',templateUrl:'views/home.html'})		
 					  .when('/overview/:nid/:mvenue',{controller:'OverviewCtrl',templateUrl:'views/overview.html'})
-					  .when('/meetingroom/:nid',{controller:'MeetingCtrl',templateUrl:'views/meetingroom.html'}) 
+					  .when('/meetingroom/:nid',{controller:'MeetingRoomCtrl',templateUrl:'views/meetingroom.html'}) 
 					  .when('/infopack/:nid',{controller:'InfoPackCtrl',templateUrl:'views/infopack.html'}) 
 					  .when('/emergency/:nid/:type',{controller:'PeopleCtrl',templateUrl:'views/emergency.html'}) 
 					  .when('/invited/:nid/:type',{controller:'PeopleCtrl',templateUrl:'views/invited.html'}) 
@@ -77,23 +78,39 @@ var controllers = {};
 			window.scrollTo(0,0);
 			
 			$scope.myPage = {};
-			$scope.myPage.alertAnnoucement = false;	
-			$scope.myPage.displaySpinner=true;
+			$rootScope.alertAnnoucement = false;	
+			//$scope.myPage.displaySpinner=true;       NOTE: To Take a chance and hide the loading spinner on the Home Page
 			
+			try{
+				$rootScope.HomeData = JSON.parse(localStorage.HomeData);
+			}catch(err){}
 
 			Factory.getHome().success( function(data){
 				
 					$rootScope.HomeData = data[0];
+					localStorage.HomeData = JSON.stringify(data[0]);
+					
 					$scope.myPage.displaySpinner=false;
+					$scope.$apply();
 					angular.element(document).ready(function () {
 						jQuery(".clickable-row").click(function() {
 							$location.path($(this).data("href"));
 							$scope.$apply();
 						});
-					});					
+					});
+					
+					if(localStorage.settings == "undefined" || localStorage.settings=='' ){
+						localStorage.settings = JSON.stringify({"VERSION":data[0].version,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1});
+					}else{
+							var settings = JSON.parse(localStorage.settings);
+							if(settings.VERSION != data[0].version){
+									localStorage.settings = JSON.stringify({"VERSION":data[0].version,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1});
+							}
+					}
+					
 					Factory.getAnnouncements($rootScope.HomeData.evt_nid).success( function(data){
 							if(localStorage.latestAnnouncement!==data[0].Submitted){
-									$scope.myPage.alertAnnoucement = true;
+									$rootScope.alertAnnoucement = true;
 							}
 					}).error(function(error) {
 							console.log("erreur:" + error);
@@ -115,18 +132,26 @@ var controllers = {};
 		    });			
 	};
 	
-	controllers.MeetingCtrl = function ($scope,$rootScope,$routeParams,$location,$route,Factory){
+	controllers.MeetingRoomCtrl = function ($scope,$rootScope,$routeParams,$location,$route,Factory){
 	
 				window.scrollTo(0,0);
 				$scope.myPage = {};	
-				$scope.myPage.displaySpinner=true;
-		
-				Factory.getRoomData($routeParams.nid).success( function(data){
-						$scope.myPage.RoomData = data;
-						$scope.myPage.displaySpinner=false;
-				}).error(function(error) {
-						console.log("erreur:" + error);
-				});
+				
+				var settings = JSON.parse(localStorage.settings);
+				if(settings.updateMap==1){
+						$scope.myPage.displaySpinner=true;		
+						Factory.getRoomData($routeParams.nid).success( function(data){
+								$scope.myPage.RoomData = data;
+								$scope.myPage.displaySpinner=false;
+								localStorage.RoomData = JSON.stringify(data);
+								settings.updateMap=0;
+								localStorage.settings = JSON.stringify(settings);
+						}).error(function(error) {
+								console.log("erreur:" + error);
+						});
+				}else{
+						$scope.myPage.RoomData = JSON.parse(localStorage.RoomData);
+				}
 				
 				$scope.doneReLoading = true;
 				$scope.$watch('online', function(){
@@ -143,14 +168,25 @@ var controllers = {};
 	
 			window.scrollTo(0,0);
 			$scope.myPage = {};	
-			$scope.myPage.displaySpinner=true;
+			
+			var settings = JSON.parse(localStorage.settings);
+			if(settings.updateInfoPack==1){
+			
+					$scope.myPage.displaySpinner=true;
 	
-			Factory.getInfoPack($routeParams.nid).success( function(data){
-					$scope.myPage.InfoPackData = data;
-					$scope.myPage.displaySpinner=false;
-			}).error(function(error) {
-					console.log("erreur:" + error);
-			});
+					Factory.getInfoPack($routeParams.nid).success( function(data){
+							$scope.myPage.InfoPackData = data;
+							$scope.myPage.displaySpinner=false;
+							localStorage.InfoPackData = JSON.stringify(data);
+							settings.updateInfoPack=0;
+							localStorage.settings = JSON.stringify(settings);
+					}).error(function(error) {
+							console.log("erreur:" + error);
+					});
+			}else{
+					$scope.myPage.InfoPackData = JSON.parse(localStorage.InfoPackData);
+			}
+					
 			
 			$scope.doneReLoading = true;
 		    $scope.$watch('online', function(){
@@ -168,15 +204,35 @@ var controllers = {};
 	
 			window.scrollTo(0,0);
 			$scope.myPage = {};	
-			$scope.myPage.displaySpinner=true;
-	
-			Factory.getPeopleData($routeParams.nid,$routeParams.type).success( function(data){
-					$scope.myPage.PeopleData = data;
-					$scope.myPage.displaySpinner=false;
-			}).error(function(error) {
-					console.log("erreur:" + error);
-			});
 			
+			var settings = JSON.parse(localStorage.settings);
+			
+			var queryType = $routeParams.type;
+			
+			if( (queryType == 'emergency' && settings.updateEmergency==1) ||  (queryType == 'invited' && settings.updateGuest==1) ){
+			
+					$scope.myPage.displaySpinner=true;
+					Factory.getPeopleData($routeParams.nid,$routeParams.type).success( function(data){
+							$scope.myPage.PeopleData = data;
+							$scope.myPage.displaySpinner=false;
+							if(queryType == 'emergency'){
+								localStorage.Emergency = JSON.stringify(data);
+								settings.updateEmergency=0;
+							}else{
+								localStorage.Guest = JSON.stringify(data);
+								settings.updateGuest=0;							
+							}
+							localStorage.settings = JSON.stringify(settings);
+					}).error(function(error) {
+							console.log("erreur:" + error);
+					});
+			}else{
+					if(queryType == 'emergency'){
+							$scope.myPage.PeopleData = JSON.parse(localStorage.Emergency);
+					}else{
+							$scope.myPage.PeopleData = JSON.parse(localStorage.Guest);
+					}
+			}
 			$scope.doneReLoading = true;
 		    $scope.$watch('online', function(){
 				 if(!$rootScope.online) $scope.doneReLoading = false; 
@@ -192,7 +248,7 @@ var controllers = {};
 	
 			window.scrollTo(0,0);
 			$scope.myPage = {};	
-			$scope.myPage.displaySpinner=true;
+			
 			
 			var screenWidth = $window.innerWidth * 95.0/100.0;
 			if($window.innerWidth<340){
@@ -200,19 +256,26 @@ var controllers = {};
 			}else{
 				$scope.myPage.dbnameWidth = screenWidth * 95.0 /100.0;		
 			}
-	
-			Factory.getAnnouncements($routeParams.nid).success( function(data){
-					$scope.myPage.AnnounceData = data;
-					localStorage.latestAnnouncement =data[0].Submitted;
-					$scope.myPage.displaySpinner=false;
-					angular.element(document).ready(function () {
-						//	jQuery(".clickable-row").click(function() {
-						//			window.location = $(this).data("href");
-						//	});
+			
+			if($rootScope.alertAnnoucement){  // Meaning if there is no Alert for a new Annoucement
+												 // Do not load data
+					$scope.myPage.displaySpinner=true;
+					Factory.getAnnouncements($routeParams.nid).success( function(data){
+							$scope.myPage.AnnounceData = data;
+							localStorage.Annoucements = JSON.stringify(data);
+							localStorage.latestAnnouncement =data[0].Submitted;
+							$scope.myPage.displaySpinner=false;
+							angular.element(document).ready(function () {
+								//	jQuery(".clickable-row").click(function() {
+								//			window.location = $(this).data("href");
+								//	});
+							});
+					}).error(function(error) {
+							console.log("erreur:" + error);
 					});
-			}).error(function(error) {
-					console.log("erreur:" + error);
-			});
+			}else{
+						$scope.myPage.AnnounceData = JSON.parse(localStorage.Annoucements);
+			}
 			
 			$scope.doneReLoading = true;
 		    $scope.$watch('online', function(){
