@@ -100,11 +100,11 @@ var controllers = {};
 					});
 					
 					if(localStorage.settings == "undefined" || localStorage.settings=='' ){
-						localStorage.settings = JSON.stringify({"VERSION":data[0].version,"evt_nid":data[0].evt_nid,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1});
+						localStorage.settings = JSON.stringify({"VERSION":data[0].version,"evt_nid":data[0].evt_nid,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1,"updateOverview":1});
 					}else{
 							var settings = JSON.parse(localStorage.settings);
 							if(settings.evt_nid != data[0].evt_nid || settings.VERSION != data[0].version){
-									localStorage.settings = JSON.stringify({"VERSION":data[0].version,"evt_nid":data[0].evt_nid,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1});
+									localStorage.settings = JSON.stringify({"VERSION":data[0].version,"evt_nid":data[0].evt_nid,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1,"updateOverview":1});
 							}
 					}
 					
@@ -257,7 +257,7 @@ var controllers = {};
 				$scope.myPage.dbnameWidth = screenWidth * 95.0 /100.0;		
 			}
 			
-			if($rootScope.alertAnnoucement){  // Meaning if there is no Alert for a new Annoucement
+			if($rootScope.alertAnnoucement || localStorage.Annoucements=="undefined"){  // Meaning if there is no Alert for a new Annoucement
 												 // Do not load data
 					$scope.myPage.displaySpinner=true;
 					Factory.getAnnouncements($routeParams.nid).success( function(data){
@@ -334,7 +334,6 @@ var controllers = {};
 			
 			window.scrollTo(0,0);
 			$scope.myPage = {};	
-			$scope.myPage.displaySpinner=true;
 			
 			var screenWidth = $window.innerWidth * 95.0/100.0;
 			if($window.innerWidth<340){
@@ -348,22 +347,41 @@ var controllers = {};
 					return inputValue;
 					//return escape(inputValue);
 			};
+			
+			var settings = JSON.parse(localStorage.settings);
+			if(settings.updateOverview==1){
+			
+					$scope.myPage.displaySpinner=true;
 	
-			Factory.getAgendaOverview($routeParams.nid).success( function(data){
-					$scope.myPage.Overview = data;
-					$scope.myPage.MainVenue = $routeParams.mvenue;
-					$scope.myPage.displaySpinner=false;
-					angular.element(document).ready(function () {
-							jQuery(".clickable-row").click(function() {
-									//window.location = $(this).data("href");
-									$location.path($(this).data("href"));
-									$scope.$apply();
+					Factory.getAgendaOverview($routeParams.nid).success( function(data){
+							$scope.myPage.Overview = data;
+							$scope.myPage.MainVenue = $routeParams.mvenue;
+							$scope.myPage.displaySpinner=false;
+							localStorage.Overview = JSON.stringify(data);
+							localStorage.MainVenue = $routeParams.mvenue;
+							settings.updateOverview=0;
+							localStorage.settings = JSON.stringify(settings);
+							angular.element(document).ready(function () {
+									jQuery(".clickable-row").click(function() {
+											//window.location = $(this).data("href");
+											$location.path($(this).data("href"));
+											$scope.$apply();
+									});
 							});
-					});
-			}).error(function(error) {
-					console.log("erreur:" + error);
-			});		
-
+					}).error(function(error) {
+							console.log("erreur:" + error);
+					});		
+			}else{
+						$scope.myPage.Overview = JSON.parse(localStorage.Overview);
+						$scope.myPage.MainVenue = localStorage.MainVenue;
+						angular.element(document).ready(function () {
+									jQuery(".clickable-row").click(function() {
+											//window.location = $(this).data("href");
+											$location.path($(this).data("href"));
+											$scope.$apply();
+									});
+						});
+			}
 			$scope.doneReLoading = true;
 		    $scope.$watch('online', function(){
 				 if(!$rootScope.online) $scope.doneReLoading = false; 
