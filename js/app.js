@@ -121,7 +121,15 @@ var controllers = {};
 						}).error(function(error) {
 								console.log("erreur:" + error);
 						});	
-			}catch(err){}
+			}catch(err){
+			
+								angular.element(document).ready(function () {
+									jQuery(".clickable-row").click(function() {
+										$location.path($(this).data("href"));
+										$scope.$apply();
+									});
+								});	
+			}
 
 			$scope.doneReLoading = true;
 		    $scope.$watch('online', function(){
