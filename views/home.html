@@ -1,5 +1,3 @@
-
-
     <nav class="h3acolor navbar navbar-expand  static-top">
       <img src="images/icon.png" height="45px" style="padding-right:10px;"> H3Africa - {{HomeData.app_label}}
     </nav>
@@ -9,7 +7,7 @@
 			 <!--label style="margin-right:15px;font-weight:bold;font-size:15px;" class="btn btn-primary btn-xs">Duration 6 days</label-->	
 				{{HomeData.w_message}}		 
 		 </div>
-		 <div class="checkAll" ng-show="!online && myPage.displaySpinner" style="padding:10px 0 10px 15px;background-color:#ffc107;">
+		 <div class="checkAll" ng-show="!online" style="padding:10px 0 10px 15px;background-color:#ffc107;">
 				<i class="fas fa-info-circle"></i> No Internet access... :(
 		 </div>
 	</div>
@@ -46,7 +44,7 @@
                   <div class="card-body-icon">
                     <i class="fas fa-fw fa-comments"></i>
                   </div>
-                  <div class="mr-5" style="font-weight:bold;"><span ng-show="myPage.alertAnnoucement" style="color: red;font-weight: bolder;font-size: 15px;border: 2px solid red;padding: 2px;border-radius: 6px;"><i class="fas fa-bell"></i> News</span> Announcements! </div>
+                  <div class="mr-5" style="font-weight:bold;"><span ng-show="alertAnnoucement" style="color: red;font-weight: bolder;font-size: 15px;border: 2px solid red;padding: 2px;border-radius: 6px;"><i class="fas fa-bell"></i> News</span> Announcements! </div>
                 </div>
                 <span class="card-footer text-white clearfix small z-1 clickable-row" data-href="/announcement/{{HomeData.evt_nid}}">
                   <span class="float-left">View Details</span>
@@ -144,5 +142,3 @@
 				</div>
 		</center>
 </div>
-
-
