@@ -85,6 +85,7 @@ body.fixed-nav.sidebar-toggled #content-wrapper {
 
 .z-1 {
   z-index: 1;
+  cursor:pointer;
 }
 
 .navbar-nav .form-inline .input-group {
