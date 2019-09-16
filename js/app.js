@@ -83,9 +83,10 @@ var controllers = {};
 			
 			try{
 				$rootScope.HomeData = JSON.parse(localStorage.HomeData);
-			
+			}catch(err){}
 
-						Factory.getHome().success( function(data){
+			try{
+								Factory.getHome().success( function(data){
 							
 								$rootScope.HomeData = data[0];
 								localStorage.HomeData = JSON.stringify(data[0]);
