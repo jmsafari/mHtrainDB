@@ -126,7 +126,7 @@ var controllers = {};
 			$scope.doneReLoading = true;
 		    $scope.$watch('online', function(){
 				 if(!$rootScope.online) $scope.doneReLoading = false; 
-				 if(!$scope.doneReLoading && $rootScope.online && $scope.myPage.displaySpinner){ 
+				 if(!$scope.doneReLoading && $rootScope.online){ 
 					$scope.doneReLoading = true;
 					$route.reload();
 					$scope.$apply();
