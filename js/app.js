@@ -83,43 +83,44 @@ var controllers = {};
 			
 			try{
 				$rootScope.HomeData = JSON.parse(localStorage.HomeData);
-			}catch(err){}
+			
 
-			Factory.getHome().success( function(data){
-				
-					$rootScope.HomeData = data[0];
-					localStorage.HomeData = JSON.stringify(data[0]);
-					
-					$scope.myPage.displaySpinner=false;
-					//$scope.$apply();
-					angular.element(document).ready(function () {
-						jQuery(".clickable-row").click(function() {
-							$location.path($(this).data("href"));
-							$scope.$apply();
-						});
-					});
-					
-					if(localStorage.settings == "undefined" || localStorage.settings=='' ){
-						localStorage.settings = JSON.stringify({"VERSION":data[0].version,"evt_nid":data[0].evt_nid,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1,"updateOverview":1});
-					}else{
-							var settings = JSON.parse(localStorage.settings);
-							if(settings.evt_nid != data[0].evt_nid || settings.VERSION != data[0].version){
-									localStorage.settings = JSON.stringify({"VERSION":data[0].version,"evt_nid":data[0].evt_nid,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1,"updateOverview":1});
-							}
-					}
-					
-					Factory.getAnnouncements($rootScope.HomeData.evt_nid).success( function(data){
-							if(localStorage.latestAnnouncement!==data[0].Submitted){
-									$rootScope.alertAnnoucement = true;
-							}
-					}).error(function(error) {
-							console.log("erreur:" + error);
-					});
+						Factory.getHome().success( function(data){
+							
+								$rootScope.HomeData = data[0];
+								localStorage.HomeData = JSON.stringify(data[0]);
 								
-				
-			}).error(function(error) {
-					console.log("erreur:" + error);
-			});	
+								$scope.myPage.displaySpinner=false;
+								//$scope.$apply();
+								angular.element(document).ready(function () {
+									jQuery(".clickable-row").click(function() {
+										$location.path($(this).data("href"));
+										$scope.$apply();
+									});
+								});
+								
+								if(localStorage.settings == "undefined" || localStorage.settings=='' ){
+									localStorage.settings = JSON.stringify({"VERSION":data[0].version,"evt_nid":data[0].evt_nid,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1,"updateOverview":1});
+								}else{
+										var settings = JSON.parse(localStorage.settings);
+										if(settings.evt_nid != data[0].evt_nid || settings.VERSION != data[0].version){
+												localStorage.settings = JSON.stringify({"VERSION":data[0].version,"evt_nid":data[0].evt_nid,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1,"updateOverview":1});
+										}
+								}
+								
+								Factory.getAnnouncements($rootScope.HomeData.evt_nid).success( function(data){
+										if(localStorage.latestAnnouncement!==data[0].Submitted){
+												$rootScope.alertAnnoucement = true;
+										}
+								}).error(function(error) {
+										console.log("erreur:" + error);
+								});
+											
+							
+						}).error(function(error) {
+								console.log("erreur:" + error);
+						});	
+			}catch(err){}
 
 			$scope.doneReLoading = true;
 		    $scope.$watch('online', function(){
