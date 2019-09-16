@@ -91,7 +91,7 @@ var controllers = {};
 					localStorage.HomeData = JSON.stringify(data[0]);
 					
 					$scope.myPage.displaySpinner=false;
-					$scope.$apply();
+					//$scope.$apply();
 					angular.element(document).ready(function () {
 						jQuery(".clickable-row").click(function() {
 							$location.path($(this).data("href"));
@@ -100,11 +100,11 @@ var controllers = {};
 					});
 					
 					if(localStorage.settings == "undefined" || localStorage.settings=='' ){
-						localStorage.settings = JSON.stringify({"VERSION":data[0].version,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1});
+						localStorage.settings = JSON.stringify({"VERSION":data[0].version,"evt_nid":data[0].evt_nid,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1});
 					}else{
 							var settings = JSON.parse(localStorage.settings);
-							if(settings.VERSION != data[0].version){
-									localStorage.settings = JSON.stringify({"VERSION":data[0].version,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1});
+							if(settings.evt_nid != data[0].evt_nid || settings.VERSION != data[0].version){
+									localStorage.settings = JSON.stringify({"VERSION":data[0].version,"evt_nid":data[0].evt_nid,"updateMap":1,"updateGuest":1,"updateEmergency":1,"updateInfoPack":1});
 							}
 					}
 					
