@@ -59,10 +59,12 @@ app.config( function($routeProvider){
 		
 		/*   PAGES   */      
 		$routeProvider.when('/',{controller:'HomeCtrl',templateUrl:'views/home.html'})
-					  .when('/home',{controller:'HomeCtrl',templateUrl:'views/home.html'})		
+					  .when('/home',{controller:'HomeCtrl',templateUrl:'views/home.html?v2'})		
 					  .when('/overview/:nid/:mvenue',{controller:'OverviewCtrl',templateUrl:'views/overview.html'})
 					  .when('/meetingroom/:nid',{controller:'MeetingRoomCtrl',templateUrl:'views/meetingroom.html'}) 
-					  .when('/infopack/:nid',{controller:'InfoPackCtrl',templateUrl:'views/infopack.html'}) 
+					  .when('/infopack/:nid',{controller:'InfoPackCtrl',templateUrl:'views/infopack.html'})
+					  .when('/socialnetwork',{controller:'SocialNetworkCtrl',templateUrl:'views/socialnetwork.html'})	
+					  .when('/contact-us/:nid',{controller:'ContactUsCtrl',templateUrl:'views/contact_us.html'})					  
 					  .when('/emergency/:nid/:type',{controller:'PeopleCtrl',templateUrl:'views/emergency.html'}) 
 					  .when('/invited/:nid/:type',{controller:'PeopleCtrl',templateUrl:'views/invited.html'}) 
 					  .when('/announcement/:nid',{controller:'AnnouncementCtrl',templateUrl:'views/announcement.html'})
@@ -119,7 +121,7 @@ var controllers = {};
 											
 							
 						}).error(function(error) {
-								console.log("erreur:" + error);
+							//	console.log("erreur:" + error);
 						});	
 			}catch(err){
 			
@@ -172,6 +174,90 @@ var controllers = {};
 						$scope.$apply();
 					}
 				});	
+	};
+	
+	controllers.ContactUsCtrl = function ($scope,$rootScope,$routeParams,$location,$route,Factory){
+	
+				window.scrollTo(0,0);
+				$scope.myPage = {};	
+				$scope.myPage.feedback = '';
+				$scope.myPage.subject = '';
+				$scope.myPage.yr_email = '';
+				$scope.myPage.yr_fullname = '';
+				$scope.myPage.message = '';
+				$scope.myPage.captcha = '';
+				$scope.myPage.displaySpinner = false;
+				$scope.myPage.rand1 = Math.floor((Math.random() * 10) + 1);
+				$scope.myPage.rand2 = Math.floor((Math.random() * 10) + 1);
+				$scope.myPage.feedback= '';
+				
+				$scope.sendEmail = function(){
+						if($scope.myPage.rand1+$scope.myPage.rand2==$scope.myPage.captcha){
+								$scope.myPage.displaySpinner = true;
+								Factory.sendMessage($routeParams.nid,$scope.myPage.subject,$scope.myPage.yr_email,$scope.myPage.yr_fullname,$scope.myPage.message).success( function(data){
+									$scope.myPage.feedback = data.feedback;
+									if(data.feedback == "OK"){
+											$scope.myPage.subject = '';
+											$scope.myPage.yr_email = '';
+											$scope.myPage.yr_fullname = '';
+											$scope.myPage.message = '';
+											$scope.myPage.captcha = '';
+											$scope.myPage.displaySpinner = false;
+											console.log(data);
+									}
+								}).error(function(data) {
+									$scope.myPage.captcha = '';
+									$scope.myPage.rand1 = Math.floor((Math.random() * 10) + 1);;
+									$scope.myPage.rand2 =Math.floor((Math.random() * 10) + 1);;
+									// console.log(data);			
+								});
+						}else{
+								$scope.myPage.captcha = '';
+								$scope.myPage.rand1 =Math.floor((Math.random() * 10) + 1);;
+								$scope.myPage.rand2 =Math.floor((Math.random() * 10) + 1);;
+						}
+				};
+				
+				var settings = JSON.parse(localStorage.settings);
+				if(settings.updateMap==1){
+						$scope.myPage.displaySpinner=true;		
+						Factory.getRoomData($routeParams.nid).success( function(data){
+								$scope.myPage.RoomData = data;
+								$scope.myPage.displaySpinner=false;
+								localStorage.RoomData = JSON.stringify(data);
+								settings.updateMap=0;
+								localStorage.settings = JSON.stringify(settings);
+						}).error(function(error) {
+								console.log("erreur:" + error);
+						});
+				}else{
+						$scope.myPage.RoomData = JSON.parse(localStorage.RoomData);
+				}
+				
+				$scope.doneReLoading = true;
+				$scope.$watch('online', function(){
+					 if(!$rootScope.online) $scope.doneReLoading = false; 
+					 if(!$scope.doneReLoading && $rootScope.online && $scope.myPage.displaySpinner){ 
+						$scope.doneReLoading = true;
+						$route.reload();
+						$scope.$apply();
+					}
+				});	
+	};
+	
+	controllers.SocialNetworkCtrl = function ($scope,$rootScope,$routeParams,$location,$route,Factory){
+
+			window.scrollTo(0,0);
+			$scope.myPage = {};	
+			
+			/*	angular.element(document).ready(function () {
+					jQuery(".clickable-row").click(function() {
+						$location.path($(this).data("href"));
+						$scope.$apply();
+					});
+				});
+			*/
+				
 	};
 	
 	controllers.InfoPackCtrl = function ($scope,$rootScope,$routeParams,$location,$route,Factory){
@@ -425,6 +511,15 @@ var controllers = {};
 					return  $http({
 							url: URL + 'announcements-json/' + nid,
 							method: 'POST'
+					});
+			};
+			
+			factory.sendMessage = function(nid,subject,yr_email,yr_fullname,message){
+			
+					return  $http({
+							url: URL + 'node/479',
+							method: 'POST',
+							data: {nid:nid,subject:subject,yr_email:yr_email,yr_fullname:yr_fullname,message:message}
 					});
 			};
 			
