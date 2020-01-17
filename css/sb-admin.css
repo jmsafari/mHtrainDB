@@ -407,3 +407,18 @@ h5.mb-0 > button{
 	color: #000;
 	font-weight: bolder;
 }
+
+.div-menu{
+	padding: 10px 0px;
+    text-align: center;
+    border-width: 0 1px 1px 1px;
+    border-style: solid;
+    border-color: #eaeaea;
+	cursor:pointer;
+}
+
+.div-menu > h1 {
+    font-size: 14px;
+    text-transform: uppercase;
+    margin-top: 14px;
+}
