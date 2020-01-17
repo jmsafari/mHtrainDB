@@ -16,12 +16,52 @@
 
       <!-- Sidebar -->
 
-      <div id="content-wrapper" ng-show="!myPage.displaySpinner" style="margin-top:55px;">
+      <div id="content-wrapper" ng-show="!myPage.displaySpinner" style="margin-top:32px;">
 
-        <div class="container-fluid">
+<div class="row">
+	  <div class="col div-menu clickable-row" data-href="/overview/{{HomeData.evt_nid}}/{{HomeData.m_venue}}"">
+				<h1>Agenda/Meeting</h1>
+				<i class="far fa-calendar-alt" style="font-size:50px;"></i>
+	  </div>
+	  <div class="col div-menu clickable-row" data-href="/announcement/{{HomeData.evt_nid}}">
+			<h1 style="{{alertAnnoucement?'color:red;font-weight:bold;':''}}"><i ng-show="alertAnnoucement" class="fas fa-bell" style="font-size:18px;color: red;"></i> Announcements</h1>
+		    <i class="fas fa-bullhorn" style="font-size:50px;{{alertAnnoucement?'color:red;':''}}"></i>
+	  </div>
+</div>
+<div class="row">
+		<div class="col div-menu clickable-row" data-href="/meetingroom/{{HomeData.evt_nid}}">
+				<h1>Meeting Rooms</h1>
+				<i class="fas fa-map-marker-alt" style="font-size:50px;"></i>  
+		</div>
+		<div class="col div-menu clickable-row" data-href="/emergency/{{HomeData.evt_nid}}/emergency">
+				<h1>Emergency Contacts</h1>
+				<i class="fas fa-fw fa-phone" style="font-size:50px;"></i>
+		</div>
+</div>
+<div class="row">
+		<div class="col div-menu clickable-row" data-href="/infopack/{{HomeData.evt_nid}}">				
+				<h1>Information Pack</h1>
+				<i class="fas fa-info-circle" style="font-size:50px;"></i>
+	    </div>
+		<div class="col div-menu clickable-row" data-href="/invited/{{HomeData.evt_nid}}/invited">				
+				<h1>Invited Guests</h1>
+				<i class="fas fa-users" style="font-size:50px;"></i>
+		</div>
+</div>
+<div class="row">
+		<div class="col div-menu clickable-row" data-href="/socialnetwork">				
+				<h1>Follow us</h1>
+				<i class="fas fa-project-diagram" style="font-size:50px;"></i>
+	    </div>
+		<div class="col div-menu clickable-row" data-href="/contact-us/{{HomeData.evt_nid}}">				
+				<h1>Contact us</h1>
+				<i class="far fa-envelope" style="font-size:50px;"></i>
+		</div>
+</div>	  
+        <!--div class="container-fluid"-- OLD STARTED HERE>
           <!-- Breadcrumbs-->
           <!-- Icon Cards-->
-          <div class="row">
+          <!--div class="row">
             <div class="col-xl-4 col-sm-4 mb-3">              
               <div class="card text-white bg-primary o-hidden h-100" >                
                 <div class="card-body">
@@ -125,10 +165,10 @@
               </div>
             </div>
 
-          </div>  		  
+          </div-->  		  
 
         <!-- Speaker -->
-      </div>
+      <!--/div-- OLD STARTED HERE>
     </div>
 	
 	<!---- Spinner / Loader ---->
