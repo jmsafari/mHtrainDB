@@ -41,7 +41,7 @@ app.run(function($window,$http,Factory,$rootScope,$filter,$location) {
         });
       }, false);
 	  
-	  $rootScope.dateFormatting = function(dateString) {  // YYYY-MM-DD	  
+	  $rootScope.dateFormatting_OLD = function(dateString) {  // YYYY-MM-DD	  
 				
 				try{
 					var dateArray = dateString.split('-');
@@ -52,6 +52,19 @@ app.run(function($window,$http,Factory,$rootScope,$filter,$location) {
 					return '';
 				}
 		 };
+	
+	   $rootScope.dateFormatting = function(dateString) {  // YYYY-MM-DD	  
+				
+				try{
+					var dateFormatted = new Date(dateString + " 00:00:00");
+					var monthLabel = {"0":"January","1":"February","2":"March","3":"April","4":"May","5":"June","6":"July","7":"August","8":"September","9":"October","10":"November","11":"December"};
+					var dayLabel = {"1":"Monday","2":"Tuesday","3":"Wednesday","4":"Thursday","5":"Friday","6":"Saturday","7":"Sunday"};
+					
+					return dayLabel[dateFormatted.getDay()] + ', ' + monthLabel[dateFormatted.getMonth()] + ' ' +  dateFormatted.getDate() + ' ' + dateFormatted.getFullYear();
+				}catch(err){
+					return '';
+				}
+		};
 	  	  
 });
 
@@ -409,6 +422,7 @@ var controllers = {};
 						//			window.location = $(this).data("href");
 						//	});
 						jQuery("#collapse_0").addClass('show');
+						jQuery("#agenda").attr("style","margin-top:" +(jQuery(".checkAll").outerHeight()+54)+"px;");
 					});
 			}).error(function(error) {
 					console.log("erreur:" + error);
